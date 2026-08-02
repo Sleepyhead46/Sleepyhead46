@@ -18,15 +18,14 @@ jobs:
       contents: write
 
     steps:
-      - name: Generate snake animation
+      - name: Generate dark snake
         uses: Platane/snk@v3
         with:
           github_user_name: ${{ github.repository_owner }}
           outputs: |
             dist/github-snake-dark.svg?palette=github-dark
-            dist/github-snake-purple.svg?color_snake=#a020f0&color_dots=#161b22,#0e4429,#006d32,#26a641,#39d353
 
-      - name: Push snake to output branch
+      - name: Push to output branch
         uses: crazy-max/ghaction-github-pages@v4
         with:
           target_branch: output
