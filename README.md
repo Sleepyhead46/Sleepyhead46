@@ -1,1 +1,1 @@
-![Snake animation](https://raw.githubusercontent.com/Sleepyhead46/Sleepyhead46/output/snake.svg)
+![Snake animation](https://raw.githubusercontent.com/Sleepyhead46/Sleepyhead46/output/github-snake-dark.svg)
