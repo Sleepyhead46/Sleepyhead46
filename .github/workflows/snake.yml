@@ -1,106 +1,48 @@
 name: 🐍 Generate Contribution Snake
 
 on:
+  # Update every 12 hours
   schedule:
-    # Run every 12 hours at 00:00 and 12:00 UTC
     - cron: "0 */12 * * *"
 
-  # Allow manual execution
+  # Manual trigger
   workflow_dispatch:
 
-  # Regenerate when main is updated
+  # Regenerate whenever main is updated
   push:
     branches:
       - main
 
+# Prevent multiple snake generations from running simultaneously
 concurrency:
-  group: github-contribution-snake
+  group: contribution-snake
   cancel-in-progress: true
 
 permissions:
   contents: write
 
-env:
-  # ==============================
-  # 👤 USER PROFILE
-  # ==============================
-  GITHUB_USERNAME: ${{ github.repository_owner }}
-
-  # Display / profile information
-  PROFILE_NAME: "Samyak Deshar"
-  PROFILE_ROLE: "Data Scientist | AI/ML Engineer"
-  PROFILE_LOCATION: "Kathmandu, Nepal"
-
-  # ==============================
-  # 🎨 SNAKE CONFIGURATION
-  # ==============================
-  SNAKE_LIGHT: "github-snake.svg"
-  SNAKE_DARK: "github-snake-dark.svg"
-  SNAKE_LIGHT_GIF: "github-snake.gif"
-  SNAKE_DARK_GIF: "github-snake-dark.gif"
-
 jobs:
   generate:
-    name: 🐍 Generate ${{ env.PROFILE_NAME }}'s Contribution Snake
-
+    name: Generate GitHub Contribution Snake
     runs-on: ubuntu-latest
 
     steps:
-      # --------------------------------
-      # 👤 Display User Information
-      # --------------------------------
-      - name: 👤 User Profile
-        run: |
-          echo "======================================"
-          echo "🐍 GitHub Contribution Snake"
-          echo "======================================"
-          echo "Name     : $PROFILE_NAME"
-          echo "Role     : $PROFILE_ROLE"
-          echo "Location : $PROFILE_LOCATION"
-          echo "GitHub   : @$GITHUB_USERNAME"
-          echo "======================================"
-
-      # --------------------------------
-      # 🐍 Generate Contribution Snake
-      # --------------------------------
-      - name: 🐍 Generate Snake
+      # Generate contribution snake
+      - name: 🐍 Generate Snake Animation
         uses: Platane/snk@v3
         with:
-          github_user_name: ${{ env.GITHUB_USERNAME }}
+          github_user_name: ${{ github.repository_owner }}
           outputs: |
-            dist/${{ env.SNAKE_LIGHT }}?palette=github
-            dist/${{ env.SNAKE_DARK }}?palette=github-dark
-            dist/${{ env.SNAKE_LIGHT_GIF }}?palette=github
-            dist/${{ env.SNAKE_DARK_GIF }}?palette=github-dark
+            dist/github-snake.svg
+            dist/github-snake-dark.svg?palette=github-dark
+            dist/github-snake.gif
+            dist/github-snake-dark.gif?palette=github-dark
 
-      # --------------------------------
-      # 📦 Verify Generated Files
-      # --------------------------------
-      - name: 🔍 Verify Snake Files
-        run: |
-          echo "Generated files:"
-          ls -lh dist/
-
-      # --------------------------------
-      # 🚀 Publish to Output Branch
-      # --------------------------------
+      # Publish generated files to output branch
       - name: 🚀 Publish Snake Animation
         uses: crazy-max/ghaction-github-pages@v4
         with:
-          target_branch: output
           build_dir: dist
+          target_branch: output
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # --------------------------------
-      # ✅ Completion
-      # --------------------------------
-      - name: ✅ Complete
-        run: |
-          echo "======================================"
-          echo "✅ Snake generation completed"
-          echo "👤 $PROFILE_NAME"
-          echo "💼 $PROFILE_ROLE"
-          echo "📍 $PROFILE_LOCATION"
-          echo "🐍 Contribution animation published"
-          echo "======================================"
